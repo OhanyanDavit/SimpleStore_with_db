@@ -1,4 +1,5 @@
 const {Pool} = require("pg");
+const bcrypt = require('bcrypt');
 
 const Client = new Pool({
    database: 'simplestore',
@@ -9,7 +10,7 @@ const Client = new Pool({
 
 async function adduser(name, email, password){
   const client  = await Client.connect();
-
+  password = bcrypt.hashSync(password, 10);
   try {
     await client.query('INSERT INTO users  (name, email, password) VALUES  ($1, $2, $3);', [name, email, password]); 
     return 200;
